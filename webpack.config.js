@@ -17,8 +17,7 @@ module.exports = {
         {
             //filename: 'main.js',
             filename: '[name].bundle.js',
-            path:
-                path.resolve(__dirname, 'dist')
+            path: path.resolve(__dirname, 'dist')
         }
     ,
     devtool: process.env.NODE_ENV === 'production' ? 'none' : 'inline-source-map',
@@ -76,7 +75,6 @@ module.exports = {
                         }
                     }
                 },
-
                 {
                     test: /\.css$/,
                     use: [
