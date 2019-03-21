@@ -48,7 +48,7 @@
                     }
                     var subStep = step.subSteps[j]
                     tempArr[subStep.to] = step.key
-                    break
+
                 }
 
                 this.dataList = tempArr

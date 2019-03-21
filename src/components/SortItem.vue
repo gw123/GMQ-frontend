@@ -28,17 +28,26 @@
         created() {
             //this.$refs.bottomItem is undefine
         },
+        watch: {
+            'val': function () {
+                this.change2()
+            }
+        },
         mounted() {
             ////this.$refs.bottomItem can use on mounted
-            var step = this.step
-            if (!step) {
-                step = 5
+            this.change2()
+        },
+        methods: {
+            change2() {
+                var step = this.step
+                if (!step) {
+                    step = 5
+                }
+                var boxHeight = 200
+                var bottomHeight = this.val * step
+                this.bottomItemStyle.height = bottomHeight + "px"
+                this.topItemStyle.height = (boxHeight - bottomHeight) + 'px'
             }
-            var boxHeight = 200
-            var bottomHeight = this.val * step
-            this.bottomItemStyle.height = bottomHeight + "px"
-            this.topItemStyle.height = (boxHeight - bottomHeight) + 'px'
-
         }
     }
 </script>
