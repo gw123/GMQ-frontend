@@ -37,16 +37,18 @@
                 for (var i = 0; i < this.steps.length; i++) {
                     var step = this.steps[i]
                     console.log(step)
-                    for (var j = 0; j < step.subSteps.length; j++) {
+                    for (var j = 0; j < step.subSteps.length -1; j++) {
                         var subStep = step.subSteps[j]
                         console.log(subStep.to, subStep.from)
 
-                        var tempVal = tempArr[subStep.from]
-                        tempArr[subStep.from] = tempArr[subStep.to]
-                        tempArr[subStep.to] = tempVal
+                        tempArr[subStep.to] = tempArr[subStep.from]
 
-                        console.log(subStep.from, subStep.to, tempVal ,tempArr[subStep.from])
+                        console.log(subStep.from, subStep.to, tempArr[subStep.from])
+                        console.log(tempArr)
                     }
+                    var subStep = step.subSteps[j]
+                    tempArr[subStep.to] = step.key
+                    break
                 }
 
                 this.dataList = tempArr
