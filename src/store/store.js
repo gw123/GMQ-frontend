@@ -7,11 +7,12 @@ const store = new Vuex.Store({
     state: {
         socketModule: {
             params: {
-                address: 'ws://127.0.0.1:8080/message',
+                server_addr:'http://127.0.0.1:8082',
+                address: 'ws://127.0.0.1:8082/logger',
                 isConnect: false,
             },
             socket: null,
-            messageList: []
+            messageList: [],
         },
     },
     mutations: {
@@ -28,6 +29,7 @@ const store = new Vuex.Store({
             if (!state.socketModule.params.address.startsWith("ws://")) {
                 state.socketModule.params.address = "ws://" + state.socketModule.params.address
             }
+
             try {
                 console.log("连接地址", state.socketModule.params.address)
                 state.socketModule.socket = new WebSocket(state.socketModule.params.address)
@@ -38,8 +40,9 @@ const store = new Vuex.Store({
                 }
 
                 state.socketModule.socket.onmessage = (msg) => {
-                    console.log("onmessage", msg.data)
-                    state.socketModule.messageList.push(msg.data)
+                    event = JSON.parse(msg.data)
+                    console.log("onmessage", event)
+                    state.socketModule.messageList.unshift(event)
                 }
 
                 state.socketModule.socket.onopen = () => {
@@ -47,6 +50,10 @@ const store = new Vuex.Store({
                 }
 
                 state.socketModule.socket.onerror = () => {
+                    state.socketModule.params.isConnect = false
+                }
+                state.socketModule.socket.onclose = () => {
+                    console.log("websocket close")
                     state.socketModule.params.isConnect = false
                 }
 

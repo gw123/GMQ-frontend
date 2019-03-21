@@ -1,6 +1,10 @@
 <template>
     <div class="page">
         <el-form ref="form" :model="params" label-width="120px" size="small">
+            <el-form-item label="server addr">
+                <el-input placeholder="服务端地址" v-model="params.server_addr" clearable></el-input>
+            </el-form-item>
+
             <el-form-item label="服务端地址">
                 <el-input placeholder="服务端地址" v-model="params.address" clearable></el-input>
             </el-form-item>

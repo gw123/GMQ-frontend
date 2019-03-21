@@ -1,19 +1,19 @@
 <template>
-    <div class="rootpage" >
+    <div class="rootpage">
         <header ref="header">
             <el-menu ref="header"
-                    :default-active="currentPageIndex"
-                    class="el-menu-demo"
-                    mode="horizontal"
-                    @select="handleSelect"
-                    background-color="#545c64"
-                    text-color="#fff"
-                    active-text-color="#ffd04b">
+                     :default-active="currentPageIndex"
+                     class="el-menu-demo"
+                     mode="horizontal"
+                     @select="handleSelect"
+                     background-color="#545c64"
+                     text-color="#fff"
+                     :router="true"
+                     active-text-color="#ffd04b">
+                <el-menu-item index="message">消息中心</el-menu-item>
+                <el-menu-item index="debug">调试机器</el-menu-item>
+                <el-menu-item index="setting">设置中心</el-menu-item>
 
-                <el-menu-item index="1"><router-link to="/message"> 消息中心</router-link> </el-menu-item>
-                <el-menu-item index="2"><router-link to="/debug">调试机器</router-link></el-menu-item>
-                <el-menu-item index="3"><router-link to="/setting">设置中心</router-link></el-menu-item>
-                <el-menu-item index="4"><router-link to="/devices">机器管理</router-link></el-menu-item>
             </el-menu>
         </header>
 
@@ -79,8 +79,8 @@
             resizeWindow() {
                 console.log("this.$refs", this.$refs)
             },
-            handleSelect() {
-                console.log("handleSelect")
+            handleSelect(key, keypath) {
+                console.log(key, keypath);
             },
             handleOpen() {
                 console.log("handleOpen")
