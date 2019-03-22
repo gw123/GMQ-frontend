@@ -3,7 +3,6 @@
         <el-button @click="begin">开始</el-button>
         <sort-item v-for="(item ,index ) in dataList" :val="item"></sort-item>
         <div class="messageWrap">
-
         </div>
     </div>
 </template>
@@ -18,41 +17,42 @@
         data() {
             return {
                 dataList: [10, 3, 5, 4, 8, 12, 22, 9, 7],
-                steps: [],
-
+                steps: []
             }
-        },
-        created() {
-
-        },
-        mounted() {
-            //this.ksort(this.dataList, 0, this.dataList.length - 1)
         },
         methods: {
             begin() {
                 var tempArr = this.dataList.concat()
-                this.ksort(tempArr, 0, this.dataList.length - 1)
+                this.ksort(this.dataList, 0, this.dataList.length - 1)
 
-                tempArr = this.dataList.concat()
-                for (var i = 0; i < this.steps.length; i++) {
-                    var step = this.steps[i]
-                    console.log(step)
-                    for (var j = 0; j < step.subSteps.length -1; j++) {
-                        var subStep = step.subSteps[j]
-                        console.log(subStep.to, subStep.from)
-
-                        tempArr[subStep.to] = tempArr[subStep.from]
-
-                        console.log(subStep.from, subStep.to, tempArr[subStep.from])
-                        console.log(tempArr)
-                    }
-                    var subStep = step.subSteps[j]
-                    tempArr[subStep.to] = step.key
-
+                function sleep(ms) {
+                    return new Promise(function (resolve, reject) {
+                        setTimeout(function () {
+                            resolve()
+                        }, ms)
+                    })
                 }
 
-                this.dataList = tempArr
-                console.log(this.dataList)
+                async function stepOneByOne() {
+                    for (var i = 0; i < this.steps.length; i++) {
+                        var step = this.steps[i]
+                        console.log(step.subSteps)
+                        for (var j = 0; j < step.subSteps.length - 1; j++) {
+                            var subStep = step.subSteps[j]
+                            tempArr[subStep.to] = tempArr[subStep.from]
+                            tempArr[subStep.from] = step.key
+                            this.dataList = tempArr.concat()
+                            await sleep(100)
+                        }
+
+                        var subStep = step.subSteps[j]
+                        tempArr[subStep.to] = step.key
+
+                        this.dataList = tempArr.concat()
+                        await sleep(100)
+                    }
+                }
+                stepOneByOne.bind(this)()
             },
             ksort(list, left, right) {
                 if (left >= right) {

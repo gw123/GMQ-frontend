@@ -79,13 +79,35 @@ function ksort(list, left, right) {
     }
 }
 
-console.log(items)
+
 ksort(items, 0, items.length - 1)
 
-//console.log(steps)
-console.log(items)
-
-for (var i = 0; i < steps.length; i++) {
-    console.log(steps[i].times , steps[i].i ,steps[i].j)
-    console.log(steps[i].subSteps)
+function displaySubStep(subStep) {
+    console.log(subStep)
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            resolve(subStep)
+        }, 1000)
+    })
 }
+
+async function dispalyStep(step) {
+    console.log(step.times)
+    for (var i = 0; i < step.subSteps.length; i++) {
+         await displaySubStep(step.subSteps[i])
+    }
+
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            resolve()
+        }, 1000)
+    })
+}
+
+async function show(steps) {
+    for (var i = 0; i < steps.length; i++) {
+        await dispalyStep(steps[i])
+    }
+}
+
+show(steps)
