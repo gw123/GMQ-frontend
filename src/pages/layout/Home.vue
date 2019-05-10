@@ -1,8 +1,7 @@
 <template>
     <div class="rootpage">
-        <header ref="header">
-            <el-menu ref="header"
-                     :default-active="currentPageIndex"
+        <header>
+            <el-menu :default-active="currentPageIndex"
                      class="el-menu-demo"
                      mode="horizontal"
                      @select="handleSelect"
