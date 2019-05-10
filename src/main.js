@@ -38,9 +38,77 @@ if (userToken) {
 }
 
 
+window.MessageBox = function(msg){
+    alert(msg)
+}
 
+window.POST = function (url, data, successCall, faildCall) {
+    return axios.post(url, data).then(function (response) {
+        //console.log(response)
+        if (response.data.code == 0) {
+            if (successCall == undefined) {
+                MessageBox.alert("请求成功")
+            } else {
+                successCall(response.data.data)
+            }
+        } else {
+            if (faildCall == undefined) {
+                MessageBox.alert(response.data.msg)
+            } else {
+                faildCall(response.data)
+            }
+        }
+    }).catch(function (ret) {
+        //console.log("e", ret)
+        //Sentry.captureException(ret);
+        if (ret && ret.response && ret.response.status == 401) {
+            MessageBox.alert("认证过期 ,请重新登录")
+            setTimeout(function () {
+                window.location.reload()
+            }, 1000)
+            return
+        }
+        if (faildCall == undefined) {
+            MessageBox.alert("网络错误")
+        } else {
+            faildCall("网络错误")
+        }
+    })
+}
 
+window.GET = function (url, successCall, faildCall) {
+    return axios.get(url).then(function (response) {
 
+        if (response.data.code == 0) {
+            if (successCall == undefined) {
+                MessageBox.alert("请求成功")
+            } else {
+                successCall(response.data.data)
+            }
+        } else {
+            if (faildCall == undefined) {
+                MessageBox.alert(response.data.msg)
+            } else {
+                faildCall(response.data)
+            }
+        }
+    }).catch(function (ret) {
+        //console.log("e", ret)
+        if (ret && ret.response && ret.response.status == 401) {
+            MessageBox.alert("认证过期 ,请重新登录")
+            setTimeout(function () {
+                window.location.reload()
+            }, 1000)
+            return
+        }
+
+        if (faildCall == undefined) {
+            MessageBox.alert("网络错误")
+        } else {
+            faildCall("网络错误")
+        }
+    })
+}
 
 
 /* eslint-disable no-new */

@@ -61,7 +61,7 @@
         computed: {
             ...mapState({
                 messageList: state => state.socketModule.messageList,
-                server_addr: state => state.socketModule.params.server_addr
+                host: state => state.socketModule.params.host
             })
         },
         watch: {
@@ -71,13 +71,19 @@
         },
         methods: {
             sendMessage() {
-                var url = this.server_addr + "/sendMessage?event_name=" + this.event_name
-                axios.post(url, {payload: this.payload}).then((response) => {
-                    console.log(response)
-                    if (response.code == 0) {
-                        alert("send  success")
+                var url = "http://" + this.host + "/sendMessage"
+                var event = {
+                    msg_id: "0",
+                    event_name: this.event_name,
+                    module_name: 'WebModule',
+                    payload: this.payload
+                }
+                axios.post(url, event).then((response) => {
+                    var msg = response.data
+                    if (msg.code == 0) {
+
                     } else {
-                        alert(response.msg)
+                        alert(msg.msg)
                     }
                 })
             },

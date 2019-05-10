@@ -5,28 +5,32 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 //const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 //const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
+var distRoot = "../../public"
 module.exports = {
     //entry: './src/index.js',
     //mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     entry: {
         app: './src/main.js',
-        vendor: ["vue", "vue-router"]
+        vendor: ["vue", "vue-router", "axios", "vuex"]
     },
     output:
         {
             //filename: 'main.js',
             filename: '[name].bundle.js',
-            path: path.resolve(__dirname, 'dist')
+            path: path.resolve(distRoot, 'm')
         }
     ,
     devtool: process.env.NODE_ENV === 'production' ? 'none' : 'inline-source-map',
     devServer:
         {
-            contentBase: './dist'
+            contentBase: './dist',
+            host: '127.0.0.1'
         }
     ,
     plugins: [
+        new ExtractTextPlugin("style.css"),
         //new VueLoaderPlugin(),
         //new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
@@ -34,10 +38,7 @@ module.exports = {
             template: './src/index.html'
         }),
         new webpack.optimize.CommonsChunkPlugin({
-            names: ["vendor"]
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            names: ["manifest"],
+            names: ["manifest", "vendor"],
             chunks: ["vendor"]
         })
         // new CopyWebpackPlugin([{
@@ -71,16 +72,37 @@ module.exports = {
                                 'vue-style-loader',
                                 'css-loader',
                                 'sass-loader?indentedSyntax'
-                            ]
+                            ],
+                            // scss: ExtractTextPlugin.extract({
+                            //     use: 'sass-loader',
+                            //     fallback: 'vue-style-loader'
+                            // }),
+                            css: ExtractTextPlugin.extract({
+                                use: 'css-loader',
+                                fallback: 'vue-style-loader'
+                            })
+
                         }
+                    }
+                },
+                // {
+                //     test: /\.css$/,
+                //     use: [
+                //         'style-loader',
+                //         'css-loader'
+                //     ]
+                // },
+                {
+                    test: /\.js$/,
+                    exclude: /(node_modules|bower_components)/,
+                    loader: 'babel-loader',
+                    query: {
+                        presets: ['es2015']
                     }
                 },
                 {
                     test: /\.css$/,
-                    use: [
-                        'style-loader',
-                        'css-loader'
-                    ]
+                    use: ExtractTextPlugin.extract({use: 'css-loader'})
                 },
                 {
                     test: /\.scss$/,
@@ -143,12 +165,11 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false
-            }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     sourceMap: true,
+        //     compress: {
+        //         warnings: false
+        // }),
         new webpack.LoaderOptionsPlugin({
             minimize: true
         })

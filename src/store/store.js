@@ -7,8 +7,7 @@ const store = new Vuex.Store({
     state: {
         socketModule: {
             params: {
-                server_addr:'http://127.0.0.1:8082',
-                address: 'ws://127.0.0.1:8082/logger',
+                host: '127.0.0.1',
                 isConnect: false,
             },
             socket: null,
@@ -26,13 +25,13 @@ const store = new Vuex.Store({
     },
     actions: {
         doConnect({commit, state}) {
-            if (!state.socketModule.params.address.startsWith("ws://")) {
-                state.socketModule.params.address = "ws://" + state.socketModule.params.address
+            if (!state.socketModule.params.host) {
+                state.socketModule.params.host = "127.0.0.1"
             }
-
             try {
-                console.log("连接地址", state.socketModule.params.address)
-                state.socketModule.socket = new WebSocket(state.socketModule.params.address)
+                var address = "ws://" + state.socketModule.params.host + "/message?moduleName=viewModule"
+                console.log("连接地址", address)
+                state.socketModule.socket = new WebSocket(address)
 
                 if (!state.socketModule.socket) {
                     state.socketModule.params.isConnect = false
@@ -64,6 +63,12 @@ const store = new Vuex.Store({
                 }, 600)
             }
 
+        },
+        sendMessage(msg) {
+            if (state.socketModule.socket) {
+                return state.socketModule.socket.send(msg)
+            }
+            return false
         },
         closeConnection({commit, state}) {
             if (state.socketModule.socket) {
