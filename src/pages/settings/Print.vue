@@ -3,22 +3,22 @@
         <div class="settings">
             <h4 style="text-align: center;line-height: 30px">已经配置好的打印机</h4>
             <el-row class="row header">
-                <el-col span="4" class="col">
+                <el-col :span="4" class="col">
                     打印机名称
                 </el-col>
-                <el-col span="4" class="col">
+                <el-col :span="4" class="col">
                     打印机类型
                 </el-col>
-                <el-col span="6" class="col">
+                <el-col :span="6" class="col">
                     打印机地址
                 </el-col>
-                <el-col span="3" class="col">
+                <el-col :span="3" class="col">
                     打印次数
                 </el-col>
-                <el-col span="3" class="col">
+                <el-col :span="3" class="col">
                     纸宽
                 </el-col>
-                <el-col span="4" class="col">
+                <el-col :span="4" class="col">
                     操作
                 </el-col>
             </el-row>
@@ -38,7 +38,27 @@
                         </el-select>
                     </el-col>
                     <el-col :span="6" class="col">
-                        <el-input v-model="currentPrinter.addr" placeholder="打印机地址" size="mini"></el-input>
+                        <el-select v-if="currentPrinter.type == '串口'" v-model="currentPrinter.addr" placeholder="打印机类型"
+                                   size="mini">
+                            <el-option
+                                    v-for="item in ['COM1','COM2','COM3','COM4','COM5','COM6','COM7','COM8']"
+                                    :key="item"
+                                    :label="item"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+
+                        <el-select v-else-if="currentPrinter.type == '并口'" v-model="currentPrinter.addr"
+                                   placeholder="打印机类型" size="mini">
+                            <el-option
+                                    v-for="item in ['LP1','LP2','LP3','LP4','LP5','LP6']"
+                                    :key="item"
+                                    :label="item"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+
+                        <el-input v-else v-model="currentPrinter.addr" placeholder="打印机地址" size="mini"></el-input>
                     </el-col>
                     <el-col :span="3" class="col">
                         <el-select v-model="currentPrinter.times" placeholder="打印次数" size="mini">
@@ -114,7 +134,6 @@
                 <el-col :span="8" class="col">
                     打印机地址
                 </el-col>
-
                 <el-col :span="6" class="col">
                     操作
                 </el-col>
@@ -133,6 +152,10 @@
             </el-row>
         </div>
 
+        <div class="footer">
+            <el-button type="primary" size="mini" @click="saveConfig">保存</el-button>
+        </div>
+
     </div>
 </template>
 <script>
@@ -146,7 +169,22 @@
             }
         },
         methods: {
-            changeConfig() {
+            saveConfig() {
+                var configs = [
+                    {
+                        moduleName: 'PrinterModule',
+                        configs: {
+                            printerList: this.printerList
+                        }
+                    }
+                ]
+                var url = 'http://127.0.0.1:8082/changeConfig'
+
+                axios.post(url, configs).then((response) => {
+                    console.log(response)
+                }).catch(() => {
+                    this.$message('连接失败')
+                })
 
             },
             searchPrinter() {
@@ -168,12 +206,6 @@
                 })
             },
             addPrinter(printer) {
-                // for (var i = 0; i < this.printerList.length; i++) {
-                //     if (this.printerList[i].isEdit) {
-                //         this.$message('请在编辑完当前打印机后再添加')
-                //         return
-                //     }
-                // }
                 console.log(printer)
                 if (printer) {
                     this.printerList.push(printer)
@@ -205,6 +237,9 @@
                     }
                 }
                 printer.isEdit = flag
+            },
+            submit() {
+
             },
             deletePrinter(index) {
                 this.printerList.splice(index, 1)
