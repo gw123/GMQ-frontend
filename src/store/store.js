@@ -5,76 +5,41 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        socketModule: {
-            params: {
-                host: '127.0.0.1',
-                isConnect: false,
-            },
-            socket: null,
-            messageList: [],
+        common: {
+            factories: [
+                {id: 3, label: '联迪'},
+                {id: 15, label: '新大陆'},
+                {id: 16, label: '斯普瑞'}
+            ],
+            upgrade_types: [
+                {id: 1, label: '单台升级'},
+                {id: 2, label: '指定版本号升级'},
+            ],
+            upgrade_versions: {},
         },
     },
     mutations: {
-        setAddress(state, address) {
-            // 变更状态
-            state.address = address
+        setVersions(state, data) {
+            if (data.factory_id) {
+                console.log("setVersion", "state.upgrade_versions", data)
+                state.common.upgrade_versions[data.factory_id] = data.versions
+            }
         },
-        setIsConnect(state, isConnect) {
-            state.isConnect = isConnect
+        setUpgreadeType(state, upgradeTypes) {
+            state.upgrade_types = upgradeTypes
         }
     },
     actions: {
-        doConnect({commit, state}) {
-            if (!state.socketModule.params.host) {
-                state.socketModule.params.host = "127.0.0.1"
-            }
-            try {
-                var address = "ws://" + state.socketModule.params.host + "/message?moduleName=viewModule"
-                console.log("连接地址", address)
-                state.socketModule.socket = new WebSocket(address)
-
-                if (!state.socketModule.socket) {
-                    state.socketModule.params.isConnect = false
-                    return
+        getVersions({commit, state}, factory_id) {
+            return GET("/getFactoryVersions?factory_id=" + factory_id, (rows) => {
+                var versions = []
+                for (var i = 0; i < rows.length; i++) {
+                    versions.push({id: rows[i].VersionId, label: rows[i].VersionId})
                 }
-
-                state.socketModule.socket.onmessage = (msg) => {
-                    event = JSON.parse(msg.data)
-                    console.log("onmessage", event)
-                    state.socketModule.messageList.unshift(event)
-                }
-
-                state.socketModule.socket.onopen = () => {
-                    state.socketModule.params.isConnect = true
-                }
-
-                state.socketModule.socket.onerror = () => {
-                    state.socketModule.params.isConnect = false
-                }
-                state.socketModule.socket.onclose = () => {
-                    console.log("websocket close")
-                    state.socketModule.params.isConnect = false
-                }
-
-            } catch (e) {
-                console.log("连接失败")
-                setTimeout(() => {
-                    state.socketModule.params.isConnect = false
-                }, 600)
-            }
-
+                commit('setVersions', {factory_id, versions})
+                return versions
+            })
         },
-        sendMessage(msg) {
-            if (state.socketModule.socket) {
-                return state.socketModule.socket.send(msg)
-            }
-            return false
-        },
-        closeConnection({commit, state}) {
-            if (state.socketModule.socket) {
-                state.socketModule.socket.close()
-            }
-        }
     }
 })
 

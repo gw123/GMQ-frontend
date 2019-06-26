@@ -12,11 +12,14 @@ Vue.use(ElementUI);
 
 Vue.config.productionTip = false
 
+
 window.axios = require('axios')
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 window.axios.defaults.headers.common['Content-Type'] = 'application/json'
 window.axios.defaults.timeout = 1000000
+
+var serverHost = window.serverHost ? window.serverHost : "http://127.0.0.1:10086"
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -36,26 +39,26 @@ let userToken = document.head.querySelector('meta[name="x-user-token"]')
 if (userToken) {
     window.axios.defaults.headers.common['X-USER-TOKEN'] = userToken.getAttribute('content')
 }
+import {MessageBox} from 'element-ui';
 
-
-window.MessageBox = function(msg){
-    alert(msg)
-}
 
 window.POST = function (url, data, successCall, faildCall) {
+    if (url.indexOf('/') == 0) {
+        url = serverHost + url
+    }
+
     return axios.post(url, data).then(function (response) {
-        //console.log(response)
         if (response.data.code == 0) {
             if (successCall == undefined) {
                 MessageBox.alert("请求成功")
             } else {
-                successCall(response.data.data)
+                return successCall(response.data.data)
             }
         } else {
             if (faildCall == undefined) {
                 MessageBox.alert(response.data.msg)
             } else {
-                faildCall(response.data)
+                return faildCall(response.data)
             }
         }
     }).catch(function (ret) {
@@ -77,23 +80,26 @@ window.POST = function (url, data, successCall, faildCall) {
 }
 
 window.GET = function (url, successCall, faildCall) {
+    if (url.indexOf('/') == 0) {
+        url = serverHost + url
+    }
+    console.log(url)
     return axios.get(url).then(function (response) {
-
         if (response.data.code == 0) {
             if (successCall == undefined) {
                 MessageBox.alert("请求成功")
             } else {
-                successCall(response.data.data)
+                return successCall(response.data.data)
             }
         } else {
             if (faildCall == undefined) {
                 MessageBox.alert(response.data.msg)
             } else {
-                faildCall(response.data)
+                return faildCall(response.data)
             }
         }
     }).catch(function (ret) {
-        //console.log("e", ret)
+        console.log("get request ", ret)
         if (ret && ret.response && ret.response.status == 401) {
             MessageBox.alert("认证过期 ,请重新登录")
             setTimeout(function () {
