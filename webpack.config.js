@@ -7,7 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 //const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
-var distRoot = "../../public"
+var distRoot = "./dist"
 module.exports = {
     //entry: './src/index.js',
     //mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',

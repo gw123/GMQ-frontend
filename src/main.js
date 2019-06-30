@@ -35,9 +35,9 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token')
 }
 
-let userToken = document.head.querySelector('meta[name="x-user-token"]')
+let userToken = document.head.querySelector('meta[name="X-Octopass-Token"]')
 if (userToken) {
-    window.axios.defaults.headers.common['X-USER-TOKEN'] = userToken.getAttribute('content')
+    window.axios.defaults.headers.common['X-Octopass-Token'] = userToken.getAttribute('content')
 }
 import {MessageBox} from 'element-ui';
 

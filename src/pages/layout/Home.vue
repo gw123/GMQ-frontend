@@ -10,11 +10,8 @@
                      text-color="#fff"
                      :router="true"
                      active-text-color="#ffd04b">
-                <el-menu-item index="message">消息中心</el-menu-item>
-                <el-menu-item index="debug">调试机器</el-menu-item>
-                <el-menu-item index="setting">其他设置</el-menu-item>
-                <el-menu-item index="download">下载任务</el-menu-item>
-                <el-menu-item index="devices">设备管理</el-menu-item>
+                <el-menu-item index="addDownloadJob">添加下载任务</el-menu-item>
+                <el-menu-item index="devices">绑定设备</el-menu-item>
 
             </el-menu>
         </header>
