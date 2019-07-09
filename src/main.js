@@ -19,7 +19,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 window.axios.defaults.headers.common['Content-Type'] = 'application/json'
 window.axios.defaults.timeout = 1000000
 
-var serverHost = window.serverHost ? window.serverHost : "http://127.0.0.1:10086"
+var serverHost = window.serverHost ? window.serverHost : "/pos"
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
