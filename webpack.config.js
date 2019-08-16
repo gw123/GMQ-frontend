@@ -19,7 +19,7 @@ module.exports = {
         {
             //filename: 'main.js',
             filename: '[name].bundle.js',
-            path: path.resolve(distRoot, 'm')
+            path: path.resolve(distRoot, 'static')
         }
     ,
     devtool: process.env.NODE_ENV === 'production' ? 'none' : 'inline-source-map',

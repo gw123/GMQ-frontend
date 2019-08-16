@@ -1,63 +1,17 @@
 <template>
     <div class="rootpage">
-        <header ref="header">
-            <el-menu ref="header"
-                     :default-active="currentPageIndex"
-                     class="el-menu-demo"
-                     mode="horizontal"
-                     @select="handleSelect"
-                     background-color="#545c64"
-                     text-color="#fff"
-                     :router="true"
-                     active-text-color="#ffd04b">
-                <el-menu-item index="addDownloadJob">添加下载任务</el-menu-item>
-                <el-menu-item index="devices">绑定设备</el-menu-item>
-
-            </el-menu>
-        </header>
-
-        <!--<div class="left-nav" ref="leftNav">-->
-        <!--<el-menu-->
-        <!--default-active="2"-->
-        <!--class="el-menu-vertical-demo"-->
-        <!--@open="handleOpen"-->
-        <!--@close="handleClose"-->
-        <!--background-color="#545c64"-->
-        <!--text-color="#fff"-->
-        <!--active-text-color="#ffd04b">-->
-        <!--<el-submenu index="1">-->
-        <!--<template slot="title">-->
-        <!--<i class="el-icon-location"></i>-->
-        <!--<span>导航一</span>-->
-        <!--</template>-->
-        <!--<el-menu-item-group>-->
-        <!--<template slot="title">分组一</template>-->
-        <!--<el-menu-item index="1-1">选项1</el-menu-item>-->
-        <!--<el-menu-item index="1-2">选项2</el-menu-item>-->
-        <!--</el-menu-item-group>-->
-        <!--<el-menu-item-group title="分组2">-->
-        <!--<el-menu-item index="1-3">选项3</el-menu-item>-->
-        <!--</el-menu-item-group>-->
-        <!--<el-submenu index="1-4">-->
-        <!--<template slot="title">选项4</template>-->
-        <!--<el-menu-item index="1-4-1">选项1</el-menu-item>-->
-        <!--</el-submenu>-->
-        <!--</el-submenu>-->
-        <!--<el-menu-item index="2">-->
-        <!--<i class="el-icon-menu"></i>-->
-        <!--<span slot="title">导航二</span>-->
-        <!--</el-menu-item>-->
-        <!--<el-menu-item index="3" disabled>-->
-        <!--<i class="el-icon-document"></i>-->
-        <!--<span slot="title">导航三</span>-->
-        <!--</el-menu-item>-->
-        <!--<el-menu-item index="4">-->
-        <!--<i class="el-icon-setting"></i>-->
-        <!--<span slot="title">导航四</span>-->
-        <!--</el-menu-item>-->
-        <!--</el-menu>-->
-        <!--</div>-->
-        <div class="main" ref="main">
+        <div class="menu">
+            <el-button size="mini">
+                <router-link to="/net/ping">网络测试</router-link>
+            </el-button>
+            <el-button size="mini">
+                <router-link to="/setting/index">设置</router-link>
+            </el-button>
+            <el-button size="mini">
+                <router-link to="/user/index">账号</router-link>
+            </el-button>
+        </div>
+        <div class="main">
             <router-view/>
         </div>
     </div>
@@ -93,21 +47,7 @@
 
 <style scoped lang="scss">
     .rootpage {
-        max-width: 1000px;
         margin: 0 auto;
-        header {
-            background-color: #fafafa;
-        }
-
-        .left-nav {
-            width: 20%;
-            float: left;
-        }
-        .main {
-            min-height: 480px;
-            float: left;
-            width: 100%;
-            background-color: #fafafa;
-        }
+        padding: 5px;
     }
 </style>
