@@ -8,7 +8,7 @@
                             class="inline-input"
                             v-model="form.device_no"
                             :fetch-suggestions="querySN"
-                            placeholder="请输入内容"
+                            placeholder="请输入设备SN"
                             style="width: 240px"
                     ></el-autocomplete>
                 </el-form-item>

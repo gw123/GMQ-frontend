@@ -26,8 +26,9 @@
                     <el-autocomplete
                             class="inline-input"
                             v-model="form.device_no"
+                            @select="changeDeviceNo"
                             :fetch-suggestions="querySN"
-                            placeholder="请输入内容"
+                            placeholder="请输入设备SN"
                             style="width: 240px"
                     ></el-autocomplete>
                 </el-form-item>
@@ -61,6 +62,30 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div style="margin-left: 80px">
+            <table class="gridtable" v-show="deviceInfo.factory" border="1">
+                <tr>
+                    <td>当前版本:</td>
+                    <td>{{deviceInfo.version}}</td>
+                    <td>型号:</td>
+                    <td>{{deviceInfo.ModelNumber}}</td>
+                    <td>是否支付:</td>
+                    <td>{{deviceInfo.PayStatus}}</td>
+                </tr>
+                <tr>
+                    <td>公司:</td>
+                    <td>{{deviceInfo.bid}}</td>
+                    <td>门店:</td>
+                    <td>{{deviceInfo.meid}}</td>
+                    <td>款台:</td>
+                    <td>{{deviceInfo.checkstand_id}}</td>
+                </tr>
+                <tr>
+                    <td>创建时间:</td>
+                    <td colspan="5">{{deviceInfo.CreatedAt}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </template>
 <script>
@@ -77,7 +102,17 @@
                     current_version: '',
                     to_upgrade_version: 0
                 },
-                current_upgrade_versions: []
+                current_upgrade_versions: [],
+                deviceInfo: {
+                    CreatedAt: "",
+                    bid: 0,
+                    checkstand_id: 0,
+                    factory: 0,
+                    meid: 0,
+                    version: "",
+                    ModelNumber: "",
+                    PayStatus:0
+                }
             }
         },
         computed: {
@@ -117,12 +152,36 @@
                     })
                 }
             },
+            changeDeviceNo(val) {
+                // console.log("changeDeviceNo", val)
+                this.deviceInfo.CreatedAt = val.payload.CreatedAt
+                this.deviceInfo.bid = val.payload.bid
+                this.deviceInfo.factory = val.payload.factory
+                this.deviceInfo.meid = val.payload.meid
+                this.deviceInfo.version = val.payload.version
+                this.deviceInfo.checkstand_id = val.payload.checkstand_id
+                var qeuryUrl = '/querySN?key=' + val.value
+                GET(qeuryUrl, (result) => {
+                    if (result && result instanceof Array) {
+                        this.deviceInfo.ModelNumber = result[0].payload.ModelNumber
+                        this.deviceInfo.PayStatus = result[0].payload.PayStatus
+                    }
+                })
+            },
             querySN(queryParam, cb) {
+                if (this.form.factory_id == "" || this.form.factory_id == 0) {
+                    this.$message({
+                        type: 'success',
+                        message: '请选择厂商id'
+                    });
+                    this.form.device_no = ""
+                    return false
+                }
                 if (queryParam.length <= 2) {
                     cb([])
                     return
                 }
-                var qeuryUrl = '/queryAccountsBySN?key=' + queryParam
+                var qeuryUrl = '/queryAccountsBySN?key=' + queryParam + "&factory_id=" + this.form.factory_id
                 GET(qeuryUrl, (result) => {
                     cb(result)
                 }, () => {
@@ -170,6 +229,29 @@
         h1 {
             color: #909090;
             background-color: aliceblue;
+        }
+
+        table.gridtable {
+            font-family: verdana, arial, sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+        table.gridtable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+        table.gridtable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
         }
     }
 </style>
