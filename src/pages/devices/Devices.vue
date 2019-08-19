@@ -9,11 +9,16 @@
                             v-model="form.device_no"
                             :fetch-suggestions="querySN"
                             placeholder="请输入内容"
+                            style="width: 240px"
                     ></el-autocomplete>
                 </el-form-item>
 
                 <el-form-item label="门店ID">
-                    <el-input v-model="form.merchant_id" placeholder="请输入门店ID"></el-input>
+                    <el-input v-model="form.merchant_id"
+                              style="width: 230px"
+                              placeholder="请输入门店ID">
+
+                    </el-input>
                 </el-form-item>
 
                 <el-form-item label="门店名称">
@@ -22,6 +27,7 @@
                             v-model="form.merchant_name"
                             :fetch-suggestions="queryMerchantsByName"
                             placeholder="请输入门店名称"
+                            style="width: 360px"
                             @select="selectMerchantName"
                     ></el-autocomplete>
                 </el-form-item>
@@ -75,12 +81,16 @@
                 var qeuryUrl = '/querySN?key=' + queryParam
                 GET(qeuryUrl, (result) => {
                     cb(result)
+                }, () => {
+                    cb([])
                 })
             },
             queryMerchantsByName(queryParam, cb) {
                 var qeuryUrl = '/queryMerchantsByName?key=' + queryParam
                 GET(qeuryUrl, (result) => {
                     cb(result)
+                }, () => {
+                    cb([])
                 })
             },
             queryMechantByID(id) {

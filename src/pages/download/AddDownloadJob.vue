@@ -28,6 +28,7 @@
                             v-model="form.device_no"
                             :fetch-suggestions="querySN"
                             placeholder="请输入内容"
+                            style="width: 240px"
                     ></el-autocomplete>
                 </el-form-item>
 
@@ -124,6 +125,8 @@
                 var qeuryUrl = '/queryAccountsBySN?key=' + queryParam
                 GET(qeuryUrl, (result) => {
                     cb(result)
+                }, () => {
+                    cb([])
                 })
             },
             onSubmit() {

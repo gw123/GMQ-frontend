@@ -2,10 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-//const CleanWebpackPlugin = require('clean-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 //const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 var distRoot = "./dist"
 module.exports = {
@@ -14,12 +15,19 @@ module.exports = {
     entry: {
         app: './src/main.js',
         vendor: ["vue", "vue-router", "axios", "vuex"]
+        //vendor: ["axios"]
     },
+    // externals: {
+    //     vue: 'Vue',
+    //     'element-ui': 'ElementUI',
+    //     'vue-router': 'VueRouter',
+    //     vuex: 'Vuex',
+    // },
     output:
         {
             //filename: 'main.js',
             filename: '[name].bundle.js',
-            path: path.resolve(distRoot, 'm')
+            path: path.resolve(distRoot, 'js')
         }
     ,
     devtool: process.env.NODE_ENV === 'production' ? 'none' : 'inline-source-map',
@@ -30,16 +38,22 @@ module.exports = {
         }
     ,
     plugins: [
-        new ExtractTextPlugin("style.css"),
+        new ManifestPlugin(),
+        new ExtractTextPlugin("css/app.bundle.css"),
         //new VueLoaderPlugin(),
         //new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
             title: "webpack test",
             template: './src/index.html'
         }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     names: ["manifest", "vendor"],
+        //     chunks: ["vendor"],
+        // }),
         new webpack.optimize.CommonsChunkPlugin({
-            names: ["manifest", "vendor"],
-            chunks: ["vendor"]
+            //name: 'vendor',
+            names: ['vendor', 'manifest'],
+            minChunks: Infinity,
         })
         // new CopyWebpackPlugin([{
         //     from: __dirname + '/library/majiang/asset',
@@ -157,7 +171,7 @@ module.exports = {
 if (process.env.NODE_ENV === 'production') {
     //压缩文件体积  webpack 3.* 版本使用
     // webpack 4.0 移除
-    module.exports.devtool = '#source-map'
+    //module.exports.devtool = '#source-map'
     // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
@@ -165,11 +179,13 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"'
             }
         }),
-        // new webpack.optimize.UglifyJsPlugin({
-        //     sourceMap: true,
-        //     compress: {
-        //         warnings: false
-        // }),
+        new webpack.optimize.UglifyJsPlugin({
+                sourceMap: true,
+                compress: {
+                    warnings: false
+                }
+            }
+        ),
         new webpack.LoaderOptionsPlugin({
             minimize: true
         })

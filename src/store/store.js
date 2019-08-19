@@ -8,7 +8,8 @@ const store = new Vuex.Store({
         common: {
             factories: [
                 {id: 3, label: '联迪'},
-                {id: 4, label: '斯普瑞'}
+                {id: 4, label: '斯普瑞'},
+                {id: 15, label: '天喻'},
             ],
             upgrade_types: [
                 {id: 1, label: '单台升级'},
